@@ -1,0 +1,1 @@
+cat precure.html | stack exec -- ./hawkey 'parseLT #> toListOf (root . entire . attributeIs "id" "mw-content-text" . indexing (plate . el "table") . index 3 . plate . indexing (plate . el "td") . index 0 . plate . el "a" . text) #> zipWith (\i t -> (TS.pack $ show i) <> " " <> t) [1..] #> TS.unlines #> T.fromStrict '

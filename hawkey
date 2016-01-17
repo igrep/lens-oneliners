@@ -1,0 +1,36 @@
+#!/bin/bash
+
+set -eu
+
+expression=$1
+
+imports=''
+if [ -f ./imports.hs ]; then
+  imports=$(cat ./imports.hs)
+fi
+
+declarations=''
+if [ -f ./declarations.hs ]; then
+  declarations=$(cat ./declarations.hs)
+fi
+
+unset script_file
+trap '[[ "$script_file" ]] && rm -f $script_file' 1 2 3 15
+script_file=$(mktemp "/tmp/${0##*/}.tmp.XXXXXXXXXXXXXXXXX.hs")
+
+cat > $script_file <<HASKELL
+{-# LANGUAGE OverloadedStrings #-}
+
+$imports
+
+import qualified Data.Text.Lazy.IO as TIO
+
+$declarations
+
+main :: IO ()
+main = TIO.interact ($expression)
+HASKELL
+
+stack runghc $script_file
+
+rm -f script_file
