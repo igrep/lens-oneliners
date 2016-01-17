@@ -13,3 +13,4 @@ cabal-dev
 *.prof
 *.aux
 *.hp
+.stack-work/
